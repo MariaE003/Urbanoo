@@ -17,7 +17,12 @@ class VoteRepository{
         }
         return $vote->delete();
     }
-    
+    public function findByReportAndUser($reportId, $userId){
+        return Vote::where('report_id', $reportId)->where('user_id', $userId)->first();
+    }
+    public function countByReport($reportId){
+        return Vote::where('report_id', $reportId)->count();
+    }
 
 }
 
