@@ -12,7 +12,15 @@ class CommentRepository{
         return Comment::create($data);
     }
     
-    
+    public function update($id,$data){
+        $comment=Comment::find($id);
+        $comment->update($data);
+        return $comment;
+    }
+    public function delete($id){
+        $comment=Comment::find($id);
+        return $comment->delete();
+    }
 }
 
 ?>
