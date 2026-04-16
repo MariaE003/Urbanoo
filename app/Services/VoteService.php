@@ -18,7 +18,12 @@ class VoteService{
    public function deleteVote($id){
         $this->voteRepo->remove($id);
    }
+   public function countVotesByReport($reportId){
+       return $this->voteRepo->countByReport($reportId);
+   }
+
    
+
 }
 
 ?>
