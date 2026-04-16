@@ -16,5 +16,20 @@ class CommentController extends Controller
         return response()->json($comments);
     }
 
-    
+    public function store(Request $request){
+        $validated=$request->validate([
+            'content'=>'required|string',
+            'report_id'=>'required|exists:reports,id'
+        ]);
+
+        if (auth()->user() && auth()->user()->role === "admin"){
+            $validated['is_admin']=true;
+        }
+        $validated['user_id']=auth()->id();
+        $comment=$this->commentService->createComment($validated);
+        return response()->json([
+            'message' => 'comment created',
+            'comment' => $comment,
+        ],201);
+    }
 }
