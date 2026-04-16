@@ -25,7 +25,9 @@ class ReportService{
         }
         return $report;
     }
-    
+    public function deleteReport($id){
+        $this->reportRepo->delete($id);
+    }
 }
 
 ?>
