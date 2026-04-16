@@ -26,4 +26,11 @@ class VoteController extends Controller
         return response()->json($result);
     }
 
+    public function countByReport($reportId){
+        $count = $this->voteService->countVotesByReport($reportId);
+        return response()->json([
+            'report_id' => $reportId,
+            'votes_count' => $count,
+        ]);
+    }
 }
