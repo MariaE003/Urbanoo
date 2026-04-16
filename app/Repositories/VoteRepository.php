@@ -10,6 +10,13 @@ class VoteRepository{
     public function create($data){
         return Vote::create($data);
     }
+    public function remove($id){
+        $vote= Vote::find($id);
+        if (!$vote) {
+            return false;
+        }
+        return $vote->delete();
+    }
     
 
 }
