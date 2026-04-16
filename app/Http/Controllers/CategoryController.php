@@ -16,5 +16,11 @@ class CategoryController extends Controller
         $cate=$this->categorieService->allCategories();
         return response()->json(['data'=>$cate]);
     }
+    public function store(Request $request){
+        $validated=$request->validate([
+            'name'=>'required|string|max:255',
+        ]);
+        $this->categorieService->createCategory($validated);
+    }
     
 }
