@@ -12,7 +12,13 @@ class ReportRepository{
         $user=auth()->id();
         return Report::where('user_id',$user)->get();
     }
-    
+    public function findById($id){
+        return Report::findOrFail($id);
+    }
+    public function create($data){
+        return Report::create($data);
+    }
+   
 }
 
 ?>
