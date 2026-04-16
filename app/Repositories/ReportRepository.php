@@ -18,7 +18,15 @@ class ReportRepository{
     public function create($data){
         return Report::create($data);
     }
-   
+    public function updateStatus($id,$data){
+        $report=Report::find($id);
+        $report->update($data);
+        return $report;
+    }
+    public function delete($id){
+        $report=Report::find($id);
+        return $report->delete();
+    }
 }
 
 ?>
