@@ -18,6 +18,13 @@ class ReportService{
     public function createReport($data){
         return $this->reportRepo->create($data);
     }
+    public function updateReportStatus($id,$data){
+        $report = $this->reportRepo->updateStatus($id,$data);
+        if ($report &&  $report->user) {
+            $report->user->notify(new ReportStatusChanged($report));
+        }
+        return $report;
+    }
     
 }
 
