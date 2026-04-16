@@ -45,5 +45,19 @@ class ReportController extends Controller
         // return view('reports.index',compact('reports'));
         return response()->json($reports);
     }
-    
+    public function updateStatus(Request $request, $id){
+        $validated=$request->validate([
+            'status'=>'required|string',
+        ]);
+        if (!auth()->user() || auth()->user()->role !== 'admin') {
+            return response()->json([
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+        $report = $this->serviceReport->updateReportStatus($id,$validated);
+        return response()->json([
+            'message' => 'status modifier',
+            'report'=>$report,
+        ]);
+    }
 }
