@@ -13,7 +13,12 @@ class CommentService{
     public function createComment($data){
         return $this->commentRepo->create($data);
     }
-    
+    public function updateComment($id,$data){
+        return $this->commentRepo->update($id,$data);
+    }
+    public function deleteComment($id){
+        $this->commentRepo->delete($id);
+    }
 }
 
 ?>
