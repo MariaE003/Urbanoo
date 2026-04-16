@@ -39,7 +39,4 @@ class User extends Authenticatable
     public function votes(){
         return $this->hasMany(Vote::class);
     }
-    public function notifications(){
-        return $this->hasMany(Notification::class);
-    }
 }
