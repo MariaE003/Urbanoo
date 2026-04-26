@@ -17,6 +17,9 @@ class CommentRepository{
         $comment->update($data);
         return $comment;
     }
+    public function findById($id){
+        return Comment::with(['user', 'report'])->find($id);
+    }
     public function delete($id){
         $comment=Comment::find($id);
         return $comment->delete();
