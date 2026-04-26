@@ -32,4 +32,26 @@ class CommentController extends Controller
             'comment' => $comment,
         ],201);
     }
+    public function destroy($id){
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'non authentifier'
+            ]);
+        }
+        $comment = $this->commentService->getCommentById($id);
+        if (!$comment) {
+            return response()->json([
+                'message' => 'commentaire introuvable'
+            ], 404);
+        }
+        if (auth()->user()->role !== 'admin' && (int) $comment->user_id !== (int) auth()->id()) {
+            return response()->json([
+                'message' => 'non autorise'
+            ]);
+        }
+        $this->commentService->deleteComment($id);
+        return response()->json([
+            'message' => 'commentaire supprime avec succes'
+        ]);
+    }
 }
