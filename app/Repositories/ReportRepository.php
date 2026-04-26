@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Models\Report;
+use Carbon\Carbon;
 
 class ReportRepository{
     public function getAll(){
@@ -26,6 +27,10 @@ class ReportRepository{
     public function delete($id){
         $report=Report::find($id);
         return $report->delete();
+    }
+    public function lastReports(){
+        $report=Report::with(['user','category','images'])->where('created_at','>=',Carbon::now()->subDay(3))->latest()->get();
+        return $report;
     }
 }
 
