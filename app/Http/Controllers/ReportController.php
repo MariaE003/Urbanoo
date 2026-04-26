@@ -60,4 +60,34 @@ class ReportController extends Controller
             'report'=>$report,
         ]);
     }
+    public function destroy($id){
+        if (!auth()->check()) {
+            return response()->json([
+                'message' => 'Unauthenticated'
+            ], 401);
+        }
+        $report = $this->serviceReport->getReportById($id);
+        $isAdmin = auth()->user()->role === 'admin';
+        $isOwner = (int) $report->user_id === (int) auth()->id();
+
+        if (!$isAdmin && !$isOwner) {
+            return response()->json([
+                'message' => 'non autorise'
+            ], 403);
+        }
+        if (!$isAdmin && $report->status !== 'pending') {
+            return response()->json([
+                'message' => "vous ne pouvez pas supprimer ce signalement que lorsqu'il est en attente."
+            ], 403);
+        }
+        $this->serviceReport->deleteReport($id);
+
+        return response()->json([
+            'message' => 'report supprimer avce succes'
+        ]);
+    }
+    public function lastReports(){
+        $reports = $this->serviceReport->lastReports();
+        return response()->json($reports);
+    }
 }
