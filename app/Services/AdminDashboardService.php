@@ -19,6 +19,12 @@ class AdminDashboardService{
     public function reportsBycat(){
         return $this->adminDashboardRepo->ReportsByCategorie();
     }
+    public function citizens(){
+        return $this->adminDashboardRepo->citizens();
+    }
+    public function toggleUserStatus($id){
+        return $this->adminDashboardRepo->toggleUserStatus($id);
+    }
 
 }
 

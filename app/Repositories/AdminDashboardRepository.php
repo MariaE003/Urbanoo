@@ -22,8 +22,19 @@ class AdminDashboardRepository
     public function TopReportsByVote(){
         return $reports=Report::with(['user','category'])->withCount('votes')->orderByDesc('votes_count')->take(5)->get();
     }
-    public function ReportsByCategorie(){
-        // return Report::selectRow('category_id , count(*) as total')->with('category')->groupBy('category_id')->get();
+    public function ReportsByCategorie(){//nombre des report par categorie
         return Category::withCount('report')->get();
+    }
+
+    public function citizens(){
+        return User::where('role', 'citizen')->latest()->get();
+    }
+
+    public function toggleUserStatus($id){
+        $user = User::where('role', 'citizen')->findOrFail($id);
+        $user->is_active = !$user->is_active;
+        $user->save();
+
+        return $user;
     }
 }
