@@ -1018,6 +1018,100 @@
             .openOn(carte);
     }
 
+    function ouvrirPopupCreationReport(lat, lng) {
+        if (!carte) {
+            return;
+        }
+
+        let contenu = `
+            <div class="max-h-[68vh] w-[340px] overflow-y-auto p-5">
+                <div class="mb-4">
+                    <h3 class="text-xl font-bold text-black">Nouveau signalement</h3>
+                    <p class="mt-1 text-sm text-gray-500">Décrivez le problème rencontré</p>
+                </div>
+
+                <form id="formulaire-report" class="space-y-4">
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Titre</label>
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Ex: Nid de poule dangereux"
+                            class="h-11 w-full rounded-2xl border border-gray-300 px-4 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Description</label>
+                        <textarea
+                            name="description"
+                            placeholder="Décrivez le problème..."
+                            class="min-h-[100px] w-full rounded-2xl border border-gray-300 px-4 py-3 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        ></textarea>
+                    </div>
+
+                    <input type="hidden" name="latitude" value="${lat}">
+                    <input type="hidden" name="longitude" value="${lng}">
+
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Images</label>
+                        <input
+                            type="file"
+                            name="images[]"
+                            multiple
+                            accept="image/*"
+                            class="w-full rounded-2xl border border-gray-300 px-3 py-2 text-sm text-gray-700 file:mr-3 file:rounded-xl file:border-0 file:bg-blue-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-blue-600 hover:file:bg-blue-100"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="mb-2 block text-sm font-medium text-gray-700">Catégorie</label>
+                        <select
+                            id="champ-categorie-popup"
+                            name="category_id"
+                            required
+                            class="h-11 w-full rounded-2xl border border-gray-300 px-4 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            <option value="">Choisir une catégorie</option>
+                        </select>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="inline-flex h-11 w-full items-center justify-center rounded-2xl bg-blue-600 text-sm font-medium text-white transition hover:bg-blue-700"
+                    >
+                        Envoyer le signalement
+                    </button>
+                </form>
+            </div>
+        `;
+
+        L.popup()
+            .setLatLng([lat, lng])
+            .setContent(contenu)
+            .openOn(carte);
+
+        remplirSelectsCategories();
+    }
+
+    function initCarteClic() {
+        if (!carte) {
+            return;
+        }
+
+        carte.on('click', function (e) {
+            let lat = e.latlng.lat;
+            let lng = e.latlng.lng;
+
+            if (!estConnecte) {
+                ouvrirPopupVisiteur(lat, lng);
+                return;
+            }
+
+            ouvrirPopupCreationReport(lat, lng);
+        });
+    }
+
     
 </script>
 @endpush
