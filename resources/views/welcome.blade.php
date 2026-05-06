@@ -1346,7 +1346,64 @@
         afficherReportSurCarte(reportId);
     }
 
-  
+    async function supprimerCommentaire(commentaireId, reportId) {
+        let actionSuppression = async function () {
+            let reponse = await fetch(`/comments/${commentaireId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            let data = await reponse.json();
+
+            if (!reponse.ok) {
+                msg('Erreur', data.message || 'Erreur pendant la suppression');
+                return;
+            }
+
+            notif('Commentaire supprime.', 'succes');
+            chargerCommentaires(reportId);
+        };
+
+        confirmDlg(
+            'Supprimer le commentaire',
+            'Voulez-vous vraiment supprimer ce commentaire ?',
+            actionSuppression
+        );
+    }
+
+    async function supprimerReport(reportId) {
+        let actionSuppression = async function () {
+            let reponse = await fetch(`/reports/${reportId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            let data = await reponse.json();
+
+            if (!reponse.ok) {
+                msg('Erreur', data.message || 'Erreur lors de la suppression');
+                return;
+            }
+
+            notif(data.message || 'Signalement supprime.', 'succes');
+            carte.closePopup();
+            chargerReports();
+        };
+
+        confirmDlg(
+            'Supprimer le signalement',
+            'Voulez-vous vraiment supprimer ce signalement ?',
+            actionSuppression
+        );
+    }
+
+    
 </script>
 @endpush
 @endif
