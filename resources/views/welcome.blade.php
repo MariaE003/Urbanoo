@@ -310,6 +310,40 @@
         return redIcon; // par defaut
     }
     
+    let tousLesReports = [];
+    let marqueursReports = {};
+    let categoriesMemorisees = [];
+    let servicesMemorises = [];
+
+    let userMarker = null;
+    
+    // la position actuelle
+    let boutonMaPosition = document.getElementById('myLocationBtn');
+    if (boutonMaPosition) {
+        boutonMaPosition.addEventListener('click', () => {
+            if (!navigator.geolocation) {//navigateur support geo ou non
+                msg('Localisation', 'La geolocalisation n est pas supportee sur ce navigateur.');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(position => {//demande la position actuelle
+                let lat = position.coords.latitude;//recupere lat
+                let lng = position.coords.longitude;
+
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+                userMarker = L.marker([lat, lng])
+                    .setIcon(myLocationIcon)
+                    .addTo(map)
+                    .bindPopup(creerPopupMaPosition())
+                    .openPopup();
+
+                map.setView([lat, lng], 14);//centrer la carte a cette position + niveau de zoom
+            });
+        });
+    }
+
 </script>
 @endpush
 @endif
