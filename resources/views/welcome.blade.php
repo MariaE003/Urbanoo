@@ -639,7 +639,86 @@
         `;
     }
 
-    
+    function creerBlocVotePopup(report) {
+        if (!estConnecte) {
+            return `
+                <div class="border-t border-gray-200 pt-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <span class="text-sm font-semibold text-gray-700">Votes</span>
+                        <span id="compteur-vote-${report.id}" class="text-sm font-semibold text-gray-700">0</span>
+                    </div>
+                    <div class="mt-3">
+                        ${creerBlocInvitation('voter sur un signalement')}
+                    </div>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="flex items-center justify-between border-t border-gray-200 pt-3">
+                <button type="button"
+                    id="bouton-vote-${report.id}"
+                    class="inline-flex h-11 items-center justify-center rounded-xl bg-blue-600 px-4 text-sm font-medium text-white transition hover:bg-blue-700"
+                >
+                    Valider
+                </button>
+                <span id="compteur-vote-${report.id}" class="text-sm font-semibold text-gray-700">0</span>
+            </div>
+        `;
+    }
+
+    function creerBlocCommentairesPopup(report) {
+        let formulaireCommentaire = creerBlocInvitation('ajouter un commentaire');
+
+        if (estConnecte) {
+            formulaireCommentaire = `
+                <form id="formulaire-commentaire-${report.id}" class="space-y-3">
+                    <textarea
+                        name="content"
+                        placeholder="Ajouter un commentaire..."
+                        class="min-h-[90px] w-full rounded-xl border border-gray-300 px-3 py-2 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+                    <button
+                        type="submit"
+                        class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-blue-600 text-sm font-medium text-white transition hover:bg-blue-700"
+                    >
+                        Envoyer
+                    </button>
+                </form>
+            `;
+        }
+
+        return `
+            <div class="border-t border-gray-200 pt-3">
+                <h4 class="mb-2 text-sm font-semibold text-gray-900">Commentaires</h4>
+                <div id="liste-commentaires-${report.id}" class="max-h-[170px] space-y-2 overflow-y-auto pr-1 text-sm text-gray-600">
+                    Chargement des commentaires...
+                </div>
+                <div class="mt-3">
+                    ${formulaireCommentaire}
+                </div>
+            </div>
+        `;
+    }
+
+    function creerBlocSuppressionPopup(report){
+        if (!utilisateurPeutSupprimerReport(report)) {
+            return '';
+        }
+
+        return `
+            <div class="border-t border-gray-200 pt-3">
+                <button
+                    type="button"
+                    id="bouton-supprimer-report-${report.id}"
+                    class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-red-500 text-sm font-medium text-white transition hover:bg-red-600"
+                >
+                    Supprimer ce signalement
+                </button>
+            </div>
+        `;
+    }
+
 </script>
 @endpush
 @endif
