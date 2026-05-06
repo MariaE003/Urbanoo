@@ -449,6 +449,67 @@
         return report.category ? report.category.name : 'Sans catégorie';
     }
 
+    function obtenirTexteLieu(report) {
+        if (report.location_name) {
+            return report.location_name;
+        }
+        if (report.location) {
+            return report.location;
+        }
+        if (report.latitude && report.longitude) {
+            return `${Number(report.latitude).toFixed(4)}, ${Number(report.longitude).toFixed(4)}`;
+        }
+        return 'Localisation non disponible';
+    }
+
+    function construireNomLieu(data) {//data est from nominatim
+        if (!data) {
+            return '';
+        }
+        if (data.address) {
+            let address = data.address;
+            let morceaux = [
+                address.road,
+                address.suburb,
+                address.neighbourhood,
+                address.village,
+                address.town,
+                address.city,
+                address.state
+            ].filter(Boolean);//supprimer les valeur null/vide (true)
+
+            if (morceaux.length > 0) {
+                return morceaux.slice(0, 3).join(', ');
+            }
+        }
+
+        return data.display_name || '';//display_name =>contient ladresse complet returne pas nominatim 
+    }
+
+    async function chercherLieu(lat, lng) {
+        let cle = `${Number(lat).toFixed(5)},${Number(lng).toFixed(5)}`;
+        if (cacheLieux[cle]) {
+            return cacheLieux[cle];
+        }
+        try {
+            let reponse = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&accept-language=fr`);
+
+            if (!reponse.ok) {
+                cacheLieux[cle] = `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}`;
+                return cacheLieux[cle];
+            }
+
+            let data = await reponse.json();
+            let lieu = construireNomLieu(data);
+
+            cacheLieux[cle] = lieu || `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}`;
+            return cacheLieux[cle];
+        } catch (error) {
+            cacheLieux[cle] = `${Number(lat).toFixed(4)}, ${Number(lng).toFixed(4)}`;
+            return cacheLieux[cle];
+        }
+    }
+
 </script>
 @endpush
 @endif
