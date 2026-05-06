@@ -344,6 +344,42 @@
         });
     }
 
+    const estConnecte = @json(auth()->check());
+    const estAdmin = @json(auth()->check() && auth()->user()->role === 'admin');
+    const idUtilisateur = @json(auth()->id());
+    const urlConnexion = @json(route('login'));
+    const urlInscription = @json(route('register'));
+
+    let carte = null;
+    let coucheMarqueurs = null;
+    let map = null;
+
+    if (!pageServices) {
+        carte = L.map('map').setView([31.79, -7.09], 7)//creer et centralise sur lat+long;
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {//add img to map(fond)
+            attribution: 'Map data'
+        }).addTo(carte);
+
+        coucheMarqueurs = L.layerGroup().addTo(carte);//groupe contient les marker des report + add to map
+        map = carte;
+    }
+
+    function ajusterCarte() {
+        if (!carte) {
+            return;
+        }
+
+        setTimeout(function () {
+            carte.invalidateSize();//ajuster la carte quand un changement applique sur la taile du carte
+        }, 200);
+
+        window.addEventListener('resize', function () {//pour adapter la carte au ecran
+            carte.invalidateSize();
+        });
+    }
+
+    
 </script>
 @endpush
 @endif
