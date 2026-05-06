@@ -1403,6 +1403,59 @@
         );
     }
 
+    function activerActionsGlobales() {
+        document.addEventListener('submit', function (e) {
+            if (e.target.id === 'formulaire-report') {//form envoyer par user pour ajouter un report
+                e.preventDefault();
+                envoyerReport(e.target);
+                return;
+            }
+
+            if (e.target.id.startsWith('formulaire-commentaire-')) {
+                e.preventDefault();
+                let reportId = e.target.id.replace('formulaire-commentaire-', '');
+                envoyerCommentaire(reportId, e.target);
+            }
+        });
+
+        document.addEventListener('click', function (e) {
+
+            let boutonVote = e.target.closest('[id^="bouton-vote-"]');//startWith
+            if (boutonVote) {
+                let reportId = boutonVote.id.replace('bouton-vote-', '');
+                envoyerVote(reportId);
+                return;
+            }
+
+            let boutonServiceReport = e.target.closest('[id^="bouton-service-report-"]');
+            if (boutonServiceReport) {
+                let reportId = boutonServiceReport.id.replace('bouton-service-report-', '');
+                assignerServiceReportSimple(reportId);
+                return;
+            }
+
+            let boutonStatut = e.target.closest('[id^="bouton-statut-"]');
+            if (boutonStatut) {
+                let reportId = boutonStatut.id.replace('bouton-statut-', '');
+                modifierStatutReport(reportId);
+                return;
+            }
+
+            let boutonSuppressionCommentaire = e.target.closest('[id^="bouton-supprimer-commentaire-"]');
+            if (boutonSuppressionCommentaire) {
+                let morceaux = boutonSuppressionCommentaire.id.replace('bouton-supprimer-commentaire-', '').split('-');//idComment + idReport
+                supprimerCommentaire(morceaux[0], morceaux[1]);
+                return;
+            }
+
+            let boutonSuppressionReport = e.target.closest('[id^="bouton-supprimer-report-"]');
+            if (boutonSuppressionReport) {
+                let reportId = boutonSuppressionReport.id.replace('bouton-supprimer-report-', '');
+                supprimerReport(reportId);
+            }
+        });
+    }
+
     
 </script>
 @endpush
