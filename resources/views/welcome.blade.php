@@ -379,6 +379,36 @@
         });
     }
 
+    function activerBoutonFiltres() {
+        let boutonFiltres = document.getElementById('boutonFiltres');
+        let zoneFiltres = document.getElementById('zoneFiltres');
+
+        if (!boutonFiltres || !zoneFiltres) {
+            return;
+        }
+
+        boutonFiltres.addEventListener('click', function () {
+            zoneFiltres.classList.toggle('hidden');
+
+            setTimeout(function () {
+                carte.invalidateSize();//Ajuster la carte apres open/close du filter
+            }, 150);
+        });
+    }
+    function afficherResumeFiltres(message, afficher = true) {
+        let resumeFiltres = document.getElementById('resumeFiltres');
+        if (!resumeFiltres) {
+            return;
+        }
+        if (!afficher) {
+            resumeFiltres.classList.add('hidden');
+            resumeFiltres.textContent = '';
+            return;
+        }
+        resumeFiltres.textContent = message;
+        resumeFiltres.classList.remove('hidden');
+    }
+
     
 </script>
 @endpush
