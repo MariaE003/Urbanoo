@@ -409,7 +409,46 @@
         resumeFiltres.classList.remove('hidden');
     }
 
-    
+    function formaterDate(dateTexte) {
+        return new Date(dateTexte).toLocaleDateString('fr-FR');
+    }
+
+    function obtenirNomStatut(statut) {
+        if (statut === 'pending') {
+            return 'En attente';
+        }
+
+        if (statut === 'in_progress') {
+            return 'En cours';
+        }
+
+        if (statut === 'resolved') {
+            return 'Résolu';
+        }
+
+        return statut;
+    }
+
+    function obtenirBadgeStatut(statut) {
+        if (statut === 'pending') {
+            return '<span class="inline-block rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-700">En attente</span>';
+        }
+
+        if (statut === 'in_progress') {
+            return '<span class="inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">En cours</span>';
+        }
+
+        if (statut === 'resolved') {
+            return '<span class="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">Résolu</span>';
+        }
+
+        return `<span class="inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-gray-700">${statut}</span>`;
+    }
+
+    function obtenirNomCategorie(report) {
+        return report.category ? report.category.name : 'Sans catégorie';
+    }
+
 </script>
 @endpush
 @endif
