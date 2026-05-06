@@ -532,6 +532,24 @@
         return estAdmin || Number(report.user_id) === Number(idUtilisateur);
     }
 
+    function utilisateurPeutSupprimerReport(report) {
+        if (!utilisateurPeutGererReport(report)) {
+            return false;
+        }
+        if (estAdmin) {
+            return true;
+        }
+        return report.status === 'pending';
+    }
+
+    function obtenirNomService(report) {
+        return report.service_name || '';      
+    }
+
+    function obtenirNomAuteur(report) {
+        return report.user ? report.user.name : 'Utilisateur';
+    }
+
     
 </script>
 @endpush
