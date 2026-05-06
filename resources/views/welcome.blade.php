@@ -816,7 +816,88 @@
         return servicesMemorises;
     }
 
-    
+    async function remplirSelectsCategories() {
+        let categories = await chargerCategories();
+        let champCategorie = document.getElementById('champCategorie');
+        let champCategoriePopup = document.getElementById('champ-categorie-popup');
+
+        if (champCategorie && champCategorie.options.length === 1) {
+            categories.forEach(function (categorie) {
+                let option = document.createElement('option');
+                option.value = categorie.id;
+                option.textContent = categorie.name;
+                champCategorie.appendChild(option);
+            });
+        }
+
+        if (champCategoriePopup) {
+            champCategoriePopup.innerHTML = '<option value="">Choisir une catégorie</option>';
+
+            categories.forEach(function (categorie) {
+                let option = document.createElement('option');
+                option.value = categorie.id;
+                option.textContent = categorie.name;
+                champCategoriePopup.appendChild(option);
+            });
+        }
+    }
+
+    async function chargerReports() {
+        let reponse = await fetch('/reports', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        let reports = await reponse.json();
+        await remplirLieuxReports(reports);
+        tousLesReports = reports;
+
+
+        marqueursReports = {};
+        coucheMarqueurs.clearLayers();
+
+        reports.forEach(function (report) {
+            // let marqueur = L.marker([Number(report.latitude), Number(report.longitude)])
+            let marqueur = L.marker(
+                [Number(report.latitude), Number(report.longitude)],
+                { icon: getIconByStatus(report.status) }
+            )
+            .addTo(coucheMarqueurs)
+            .bindPopup(construirePopupReport(report));
+
+            marqueursReports[report.id] = marqueur;
+
+            marqueur.on('popupopen', function () {
+                chargerCommentaires(report.id);
+                chargerVotes(report.id);
+            });
+        });
+
+        afficherListeReports(tousLesReports);
+    }
+
+    function afficherListeReports(reports) {
+        let listeReports = document.getElementById('listeReports');
+        listeReports.innerHTML = '';
+
+        if (reports.length === 0) {
+            listeReports.innerHTML = `
+                <div class="rounded-[28px] border border-gray-100 bg-white p-6 text-center text-sm text-gray-500">
+                    Aucun signalement trouvé.
+                </div>
+            `;
+            return;
+        }
+
+        reports.forEach(function (report) {
+            let bloc = document.createElement('div');
+            bloc.innerHTML = construireCarteReport(report);
+            listeReports.appendChild(bloc);
+        });
+    }
+
+   
 </script>
 @endpush
 @endif
