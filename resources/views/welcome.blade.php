@@ -1182,7 +1182,80 @@
         compteurVote.textContent = data.votes_count;
     }
 
-    
+    function majTexteVote(reportId, estValide) {
+        let boutonVote = document.getElementById(`bouton-vote-${reportId}`);
+
+        if (!boutonVote) {
+            return;
+        }
+
+        boutonVote.textContent = estValide ? 'Dévalider' : 'Valider';
+    }
+
+    async function envoyerReport(formulaire) {
+        let formData = new FormData(formulaire);//recupere tous les champs
+
+        try {
+            let reponse = await fetch('/reports', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: formData
+            });
+
+            let data = await reponse.json();
+
+            if (!reponse.ok) {
+                msg('Erreur', data.message || 'Erreur pendant la creation du signalement');
+                return;
+            }
+
+            notif(data.message || 'Signalement créé avec succès.', 'succes');
+            carte.closePopup();
+            await chargerReports();
+        } catch (error) {
+            console.error(error);
+            msg('Erreur', 'Erreur serveur.');
+        }
+    }
+
+    async function envoyerCommentaire(reportId, formulaire) {
+        let textarea = formulaire.querySelector('textarea[name="content"]');
+        let contenu = textarea.value.trim();
+
+        if (!contenu) {
+            msg('Commentaire', 'veuillez ecrire un commentaire.');
+            return;
+        }
+
+        let reponse = await fetch('/comments', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                report_id: reportId,
+                content: contenu
+            })
+        });
+
+        let data = await reponse.json();
+
+        if (!reponse.ok) {
+            msg('Erreur', data.message || "Erreur pendant l'ajout du commentaire");
+            return;
+        }
+
+        formulaire.reset();
+        notif('commentaire ajoute avec succes.', 'succes');
+        chargerCommentaires(reportId);
+    }
+
+   
 </script>
 @endpush
 @endif
