@@ -719,6 +719,104 @@
         `;
     }
 
+    function construirePopupReport(report) {
+        return `
+            <div class="max-h-[68vh] w-[340px] overflow-y-auto p-5 text-sm text-gray-700">
+                <div class="space-y-4">
+                    <div class="overflow-hidden rounded-2xl">
+                        <img src="${obtenirImageReport(report)}" alt="report" class="h-[190px] w-full object-cover">
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-lg font-bold text-gray-900 leading-6">${report.title}</h3>
+                        <p class="text-sm leading-6 text-gray-600">${report.description}</p>
+                    </div>
+
+                    <div class="flex flex-wrap gap-2">
+                        ${obtenirBadgeStatut(report.status)}
+                    </div>
+
+                    <div class="space-y-1 text-xs text-gray-500">
+                        <p><span class="font-semibold text-gray-700">Publié par :</span> ${obtenirNomAuteur(report)}</p>
+                        <p><span class="font-semibold text-gray-700">Date :</span> ${formaterDate(report.created_at)}</p>
+                        <p><span class="font-semibold text-gray-700">Lieu :</span> ${obtenirTexteLieu(report)}</p>
+                    </div>
+
+                    ${creerBlocServicePopup(report)}
+                    ${creerBlocStatutPopup(report)}
+                    ${creerBlocVotePopup(report)}
+                    ${creerBlocCommentairesPopup(report)}
+                    ${creerBlocSuppressionPopup(report)}
+                </div>
+            </div>
+        `;
+    }
+
+    function construireCarteReport(report) {
+        return `
+            <div class="overflow-hidden rounded-[28px] border border-gray-100 bg-white shadow-sm">
+                <div>
+                    <img src="${obtenirImageReport(report)}" alt="report" class="h-[190px] w-full object-cover">
+                </div>
+                <div class="space-y-4 p-5">
+                    <div class="flex items-center justify-between gap-3">
+                        ${obtenirBadgeStatut(report.status)}
+                        <p class="text-[14px] text-gray-500">${formaterDate(report.created_at)}</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        id="titre-report-${report.id}"
+                        class="titre-report text-left text-[18px] font-bold text-black transition hover:text-blue-600"
+                    >
+                        ${report.title}
+                    </button>
+
+                    <p class="text-[15px] leading-6 text-gray-600">
+                        ${report.description}
+                    </p>
+
+                    <p class="text-[14px] text-gray-500">
+                        Publié par : ${obtenirNomAuteur(report)}
+                    </p>
+
+                    <div class="flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center gap-2 text-[14px] text-gray-500">
+                            <span><img src="imgs/location.svg" alt="" class="h-4 w-4"></span>
+                            <p>${obtenirTexteLieu(report)}</p>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    async function chargerCategories() {
+        if (categoriesMemorisees.length > 0) {
+            return categoriesMemorisees;
+        }
+
+        let reponse = await fetch('/categories');
+        let data = await reponse.json();
+
+        categoriesMemorisees = data.data || [];
+        return categoriesMemorisees;
+    }
+
+    async function chargerServices() {
+        let reponse = await fetch('/services', {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        servicesMemorises = await reponse.json();
+        // afficherListeServicesAdmin();
+        return servicesMemorises;
+    }
+
+    
 </script>
 @endpush
 @endif
