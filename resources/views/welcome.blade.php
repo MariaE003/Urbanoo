@@ -280,6 +280,36 @@
         });
     }
 
+    function creerPopupMaPosition() {
+        return `
+            <div class="popup-ma-position">
+                <span class="popup-ma-position__badge">
+                    <span class="popup-ma-position__dot"></span>
+                    Position actuelle
+                </span>
+                <p class="popup-ma-position__title">Ma position</p>
+                <p class="popup-ma-position__text">Votre localisation actuelle sur la carte.</p>
+            </div>
+        `;
+    }
+
+    const redIcon = creerIconeMap('map-pin-red');
+    const yellowIcon = creerIconeMap('map-pin-yellow');
+    const greenIcon = creerIconeMap('map-pin-green');
+    const blueIcon = creerIconeMap('map-pin-blue');
+    const myLocationIcon = creerIconeMaPosition();
+
+    function getIconByStatus(status) {
+        if (status === 'pending') {
+            return redIcon;
+        } else if (status === 'in_progress') {
+            return yellowIcon;
+        } else if (status === 'resolved') {
+            return greenIcon;
+        }
+        return redIcon; // par defaut
+    }
+    
 </script>
 @endpush
 @endif
