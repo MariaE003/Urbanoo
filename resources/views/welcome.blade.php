@@ -550,6 +550,95 @@
         return report.user ? report.user.name : 'Utilisateur';
     }
 
+    function creerBlocInvitation(actionTexte) {
+        return `
+            <div class="rounded-2xl bg-slate-50 p-4 text-sm text-gray-600">
+                <p class="font-medium text-black">Connexion requise</p>
+                <p class="mt-2 leading-6">Connectez-vous pour ${actionTexte}.</p>
+                <div class="mt-3 flex gap-2">
+                    <a href="${urlConnexion}" class="rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-white hover:text-blue-600">
+                        Connexion
+                    </a>
+                    <a href="${urlInscription}" class="rounded-xl bg-blue-600 px-3 py-2 text-sm font-medium text-white transition hover:bg-blue-700" style="color: white;">
+                        Inscription
+                    </a>
+                </div>
+            </div>
+        `;
+    }
+
+    function creerBlocStatutPopup(report) {
+        if (!estAdmin) {
+            return `
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="text-sm text-gray-600">
+                        <span class="font-semibold text-gray-700">Statut :</span> ${obtenirNomStatut(report.status)}
+                    </p>
+                </div>
+            `;
+        }
+
+        return `
+            <div class="space-y-3 border-t border-gray-200 pt-3">
+                <p class="text-sm font-semibold text-gray-700">Modifier le statut</p>
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <select id="champ-statut-${report.id}" class="h-11 flex-1 rounded-xl border border-gray-300 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="pending" ${report.status === 'pending' ? 'selected' : ''}>En attente</option>
+                        <option value="in_progress" ${report.status === 'in_progress' ? 'selected' : ''}>En cours</option>
+                        <option value="resolved" ${report.status === 'resolved' ? 'selected' : ''}>Résolu</option>
+                    </select>
+                    <button type="button" id="bouton-statut-${report.id}" class="inline-flex h-11 items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-medium text-white transition hover:bg-black">
+                        Mettre à jour
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500">
+                    Statut actuel : <span id="texte-statut-${report.id}">${obtenirNomStatut(report.status)}</span>
+                </p>
+            </div>
+        `;
+    }
+    function creerBlocServicePopup(report) {
+        let nomService = obtenirNomService(report);
+
+        if (!estAdmin && !nomService) {
+            return '';
+        }
+
+        if (!estAdmin) {
+            return `
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="text-sm text-gray-600">
+                        <span class="font-semibold text-gray-700">Service :</span> ${nomService}
+                    </p>
+                </div>
+            `;
+        }
+
+        let options = '<option value="">Aucun service</option>';
+
+        servicesMemorises.forEach(function (service) {
+            let selected = Number(report.service_id) === Number(service.id) ? 'selected' : '';
+            options += `<option value="${service.id}" ${selected}>${service.name}</option>`;
+        });
+
+        return `
+            <div class="space-y-3 border-t border-gray-200 pt-3">
+                <p class="text-sm font-semibold text-gray-700">Service assigné</p>
+                <div class="flex flex-col gap-2 sm:flex-row">
+                    <select id="champ-service-report-${report.id}" class="h-11 flex-1 rounded-xl border border-gray-300 px-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        ${options}
+                    </select>
+                    <button type="button" id="bouton-service-report-${report.id}" class="inline-flex h-11 items-center justify-center rounded-xl bg-slate-900 px-4 text-sm font-medium text-white transition hover:bg-black">
+                        Enregistrer
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500">
+                    Service actuel : <span id="texte-service-report-${report.id}">${nomService || 'Aucun'}</span>
+                </p>
+            </div>
+        `;
+    }
+
     
 </script>
 @endpush
