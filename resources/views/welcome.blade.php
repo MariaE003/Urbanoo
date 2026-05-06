@@ -510,6 +510,29 @@
         }
     }
 
+    async function remplirLieuxReports(reports) {
+        await Promise.all(reports.map(async function (report) {//attent que toutes les search de lieux soient termine
+            if (!report.latitude || !report.longitude) {
+                return;
+            }
+            //en stock temporairemetn dans 
+            report.location_name = await chercherLieu(report.latitude, report.longitude);
+        }));
+    }
+
+    function obtenirImageReport(report) {
+        if (report.images && report.images.length > 0) {
+            return `/storage/${report.images[0].image_path}`;
+        }
+
+        return 'imgs/Rectangle 18.png';
+    }
+
+    function utilisateurPeutGererReport(report) {
+        return estAdmin || Number(report.user_id) === Number(idUtilisateur);
+    }
+
+    
 </script>
 @endpush
 @endif
