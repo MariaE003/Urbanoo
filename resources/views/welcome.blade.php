@@ -254,3 +254,32 @@
     </div>
 </div>
 @endsection
+@if(!$pageServices)
+@push('scripts')
+<script>
+    const pageServices = @json($pageServices);//envoyer un var php/laravel => js
+    const cacheLieux = {};
+
+    function creerIconeMap(classeCouleur) {//icons marker 
+        return L.divIcon({//divIcon(fonction Leaflet) => create icon frm element html
+            className: 'bg-transparent border-0',//coutainer du icon
+            html: `<div class="map-pin ${classeCouleur}"></div>`,//html du icon
+            iconSize: [22, 22],//w + h
+            iconAnchor: [11, 22],//bas-centre du marker su les coordone lat et long
+            popupAnchor: [0, -18]//top du marker 18
+        });
+    }
+    // ma position
+    function creerIconeMaPosition() {
+        return L.divIcon({
+            className: 'bg-transparent border-0',
+            html: '<div class="my-location-marker"></div>',
+            iconSize: [22, 22],
+            iconAnchor: [11, 11],//centre de icon sur position
+            popupAnchor: [0, -12]
+        });
+    }
+
+</script>
+@endpush
+@endif
