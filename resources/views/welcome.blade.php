@@ -953,6 +953,71 @@
         document.getElementById('boutonReinitialiser').addEventListener('click', reinitialiserFiltres);
     }
 
+    function afficherReportSurCarte(reportId) {
+        if (!carte) {
+            return;
+        }
+        let marqueur = marqueursReports[reportId];
+
+        if (!marqueur) {
+            return;
+        }
+
+        carte.invalidateSize();
+        carte.setView(marqueur.getLatLng(), 16);
+        marqueur.openPopup();
+    }
+
+    function activerClicTitresReports() {
+        document.addEventListener('click', function (e) {
+            let boutonTitre = e.target.closest('.titre-report');
+
+            if (!boutonTitre) {
+                return;
+            }
+            let reportId = boutonTitre.id.replace('titre-report-', '');
+            afficherReportSurCarte(reportId);
+        });
+    }
+
+    function ouvrirPopupVisiteur(lat, lng) {
+        if (!carte) {
+            return;
+        }
+
+        let contenu = `
+            <div class="w-[340px] p-5">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-black">Connexion requise</h3>
+                        <p class="mt-2 text-sm leading-6 text-gray-500">
+                            Vous consultez actuellement la carte en mode visiteur. Connectez-vous pour créer un signalement à cet endroit.
+                        </p>
+                    </div>
+
+                    <div class="rounded-2xl bg-slate-50 p-4 text-sm text-gray-600">
+                        <p class="font-medium text-black">Position sélectionnée</p>
+                        <p class="mt-2">${lat.toFixed(4)}, ${lng.toFixed(4)}</p>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <a href="${urlConnexion}" class="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-center text-sm font-medium text-gray-700 transition hover:bg-white hover:text-blue-600">
+                            Connexion
+                        </a>
+                        <a href="${urlInscription}" class="flex-1 rounded-2xl bg-blue-600 px-4 py-3 text-center text-sm font-medium text-white transition hover:bg-blue-700" style="color:white;">
+                            Inscription
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        L.popup()
+            .setLatLng([lat, lng])
+            .setContent(contenu)
+            .openOn(carte);
+    }
+
     
 </script>
 @endpush
