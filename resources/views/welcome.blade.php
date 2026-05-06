@@ -1112,6 +1112,76 @@
         });
     }
 
+    async function chargerCommentaires(reportId) {
+        try {
+            let reponse = await fetch(`/reports/${reportId}/comments`, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+
+            let commentaires = await reponse.json();
+            let listeCommentaires = document.getElementById(`liste-commentaires-${reportId}`);
+
+            if (!listeCommentaires) {
+                return;
+            }
+            if (commentaires.length === 0) {
+                listeCommentaires.innerHTML = '<p class="text-sm text-gray-500">aucun commentaire pour le moment.</p>';
+                return;
+            }
+
+            listeCommentaires.innerHTML = commentaires.map(function (commentaire) {
+                let peutSupprimer = estAdmin || Number(commentaire.user_id) === Number(idUtilisateur);
+                let boutonSupprimer = '';
+
+                if (peutSupprimer) {
+                    boutonSupprimer = `
+                        <button
+                            type="button"
+                            id="bouton-supprimer-commentaire-${commentaire.id}-${reportId}"
+                            class="text-xs font-medium text-red-500 transition hover:text-red-700"
+                        >
+                            supprimer
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="rounded-xl bg-slate-50 p-3">
+                        <div class="flex items-start justify-between gap-3">
+                            <p class="font-semibold text-gray-800">
+                                ${commentaire.user ? commentaire.user.name : 'Utilisateur'}
+                                ${commentaire.user && commentaire.user.role === 'admin' ? '<span class="ml-1 text-xs text-red-500">Admin</span>' : ''}
+                            </p>
+                            ${boutonSupprimer}
+                        </div>
+                        <p class="mt-2 text-sm leading-6 text-gray-600">${commentaire.content}</p>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+    async function chargerVotes(reportId) {
+        let reponse = await fetch(`/reports/${reportId}/votes/count`, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        let data = await reponse.json();
+        let compteurVote = document.getElementById(`compteur-vote-${reportId}`);
+
+        if (!compteurVote) {
+            return;
+        }
+
+        compteurVote.textContent = data.votes_count;
+    }
+
     
 </script>
 @endpush
