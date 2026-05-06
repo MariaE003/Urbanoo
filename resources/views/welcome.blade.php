@@ -897,7 +897,63 @@
         });
     }
 
-   
+    function appliquerFiltres() {
+        let motCle = document.getElementById('champRecherche').value.toLowerCase().trim();
+        let statut = document.getElementById('champStatut').value;
+        let categorieId = document.getElementById('champCategorie').value;
+        let zoneFiltres = document.getElementById('zoneFiltres');
+        let listeReports = document.getElementById('listeReports');
+
+        let reportsFiltres = tousLesReports.filter(function (report) {
+            let titre = (report.title || '').toLowerCase();
+            let description = (report.description || '').toLowerCase();
+            let okMotCle = titre.includes(motCle) || description.includes(motCle);
+            let okStatut = statut === '' || report.status === statut;
+            let okCategorie = categorieId === '' || String(report.category_id) === String(categorieId);
+
+            return okMotCle && okStatut && okCategorie;
+        });
+
+        afficherListeReports(reportsFiltres);
+
+        if (listeReports) {
+            listeReports.scrollTop = 0;
+        }
+
+        if (zoneFiltres) {
+            zoneFiltres.classList.add('hidden');
+        }
+
+        afficherResumeFiltres(`${reportsFiltres.length} signalement(s) trouvé(s).`);
+
+        setTimeout(function () {
+            carte.invalidateSize();
+        }, 100);
+    }
+
+    function reinitialiserFiltres() {
+        document.getElementById('champRecherche').value = '';
+        document.getElementById('champStatut').value = '';
+        document.getElementById('champCategorie').value = '';
+        afficherListeReports(tousLesReports);
+        afficherResumeFiltres('', false);
+        carte.setView([31.63, -8.00], 7);
+
+        setTimeout(function () {
+            carte.invalidateSize();
+        }, 100);
+    }
+
+    function activerFiltres() {
+        if (!document.getElementById('boutonRechercher') || !document.getElementById('boutonReinitialiser')) {
+            return;
+        }
+
+        document.getElementById('boutonRechercher').addEventListener('click', appliquerFiltres);
+        document.getElementById('boutonReinitialiser').addEventListener('click', reinitialiserFiltres);
+    }
+
+    
 </script>
 @endpush
 @endif
