@@ -49,7 +49,7 @@ class ReportStatusChanged extends Notification
             ->greeting("Bonjour " . $notifiable->name . ',')
             ->line('Le statut de votre signalement "' . $this->report->title . '" a ete modifie')
             ->line("nouveau status :". $this->report->status)
-            ->action('Notification Action', url('/'))
+            ->action('Voir le signalement', url('/'))
             ->line("Merci d'utiliser notre plateforme");
     }
 

@@ -16,12 +16,6 @@ class VoteService{
    public function allVotes(){
         return $this->voteRepo->getAll();
    }
-   public function createVote($data){
-        return $this->voteRepo->create($data);
-   }
-   public function deleteVote($id){
-        return $this->voteRepo->remove($id);
-   }
    public function countVotesByReport($reportId){
        return $this->voteRepo->countByReport($reportId);
    }
