@@ -1456,7 +1456,32 @@
         });
     }
 
-    
+    function ouvrirReportDepuisUrl() {
+        let params = new URLSearchParams(window.location.search);// recupere les parametres presents dans l'url
+        let reportId = params.get('report');//recupere value
+
+        if (!reportId) {
+            return;
+        }
+
+        setTimeout(function () {
+            afficherReportSurCarte(reportId);
+        }, 500);
+    }
+
+    async function initAccueil() {
+        ajusterCarte();
+        activerBoutonFiltres();
+        activerFiltres();
+        activerClicTitresReports();
+        initCarteClic();
+        activerActionsGlobales();
+        await remplirSelectsCategories();
+        await chargerServices();
+        await chargerReports();
+        ouvrirReportDepuisUrl();
+    }
+        initAccueil();
 </script>
 @endpush
 @endif
