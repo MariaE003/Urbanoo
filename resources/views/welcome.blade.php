@@ -1255,7 +1255,98 @@
         chargerCommentaires(reportId);
     }
 
-   
+    async function envoyerVote(reportId) {
+        let reponse = await fetch('/votes/toggle', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                report_id: reportId
+            })
+        });
+
+        let data = await reponse.json();
+
+        if (!reponse.ok) {
+            msg('Erreur', data.message || 'Erreur pendant le vote');
+            return;
+        }
+
+        notif('Vote enregistre.', 'succes');
+        majTexteVote(reportId, data.voted);
+        chargerVotes(reportId);
+    }
+
+    async function modifierStatutReport(reportId) {
+        let champStatut = document.getElementById(`champ-statut-${reportId}`);
+
+        if (!champStatut) {
+            return;
+        }
+
+        let reponse = await fetch(`/reports/${reportId}`, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                status: champStatut.value
+            })
+        });
+
+        let data = await reponse.json();
+
+        if (!reponse.ok) {
+            msg('Erreur', data.message || 'Erreur pendant la mise a jour du statut');
+            return;
+        }
+
+        let texteStatut = document.getElementById(`texte-statut-${reportId}`);
+        if (texteStatut) {
+            texteStatut.textContent = obtenirNomStatut(champStatut.value);
+        }
+
+        notif('Statut mis a jour.', 'succes');
+        await chargerReports();
+        afficherReportSurCarte(reportId);
+    }
+    async function assignerServiceReportSimple(reportId) {
+        let champService = document.getElementById(`champ-service-report-${reportId}`);
+
+        if (!champService) {
+            return;
+        }
+
+        let reponse = await fetch(`/reports/${reportId}`, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                service_id: champService.value === '' ? null : Number(champService.value)//affect id du service au report
+            })
+        });
+
+        let data = await reponse.json();
+
+        if (!reponse.ok) {
+            msg('Erreur', data.message || 'Erreur pendant la mise a jour du service');
+            return;
+        }
+
+        notif('Service mis a jour.', 'succes');
+        await chargerReports();
+        afficherReportSurCarte(reportId);
+    }
+
+  
 </script>
 @endpush
 @endif
