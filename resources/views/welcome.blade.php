@@ -178,18 +178,19 @@
 
     <div class="grid gap-7 xl:grid-cols-[360px_minmax(0,1fr)] xl:items-start">
         <section class="space-y-4 xl:sticky xl:top-6 xl:flex xl:h-[calc(100vh-5.5rem)] xl:flex-col xl:overflow-hidden">
-            <div class="flex items-start justify-between gap-4">
+            <!-- <div class="flex items-start justify-around gap-4"> -->
+                <div class="flex flex-wrap items-start justify-between gap-4">
                 <div>
                     <h2 class="text-2xl font-bold text-black">Signalements récents</h2>
                     <p class="mt-1 text-sm text-gray-500">Les derniers signalements publiés sur la carte</p>
                 </div>
                 <div class="flex items-center gap-3">
                     @if(auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('admin.services.index') }}" class="inline-flex shrink-0 items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+                        <a href="{{ route('admin.services.index') }}" class="inline-flex shrink-0 items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 " >
                             Services
                         </a>
                     @endif
-                    <button id="boutonFiltres" type="button" class="flex shrink-0 items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50">
+                    <button id="boutonFiltres" type="button" class="flex shrink-0 items-center gap-2 rounded-full border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50" style="margin-left:-8px;">
                         <img src="imgs/filter.svg" alt="Filtre" class="h-4 w-4">
                         Filtres
                     </button>
