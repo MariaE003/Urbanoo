@@ -16,7 +16,8 @@
 </head>
 <body class="min-h-screen bg-[#f5f5f5] text-gray-900">
 
-    <header class="border-b border-gray-200 bg-white/95 backdrop-blur">
+    <!-- <header class="border-b border-gray-200 bg-white/95 backdrop-blur overflow-visible"> -->
+        <header class="relative z-[9999] border-b border-gray-200 bg-white/95 backdrop-blur overflow-visible">
         <div class="mx-auto flex max-w-[1400px] items-center gap-4 px-4 py-4 sm:px-6">
             <a href="{{ route('home') }}" class="shrink-0">
                 <img src="{{ asset('imgs/logo.png') }}"
@@ -61,7 +62,8 @@
                             </span>
                         </button>
 
-                        <div id="menuNotifications" class="absolute right-0 z-[9999] mt-3 hidden w-[360px] overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-lg" >
+                        <!-- <div id="menuNotifications" class="fixed right-6 top-[88px] z-[99999] hidden w-[360px] overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-lg"> -->
+                        <div id="menuNotifications" class="absolute right-0 z-[99999] mt-3 hidden w-[360px] overflow-hidden rounded-[24px] border border-gray-100 bg-white shadow-lg" >
                             <div class="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                                 <h3 class="text-base font-bold text-black">Notifications</h3>
                                 <button id="boutonToutLire" type="button" class="text-sm text-blue-600 transition hover:text-blue-700">
